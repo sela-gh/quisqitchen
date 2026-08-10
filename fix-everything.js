@@ -1,75 +1,83 @@
 const fs = require('fs');
-const { execSync } = require('child_process');
 const path = require('path');
+const { execSync } = require('child_process');
 
-const rootAssetsPath = path.join(__dirname, 'assets');
-const srcAssetsPath = path.join(__dirname, 'src', 'assets');
-const srcJuicesPath = path.join(srcAssetsPath, 'juices');
+const assetsPath = path.join(__dirname, 'src', 'assets');
+const juicesPath = path.join(assetsPath, 'juices');
 
-console.log('Starting asset cleanup...');
+console.log('Scanning for assets...');
 
-// 1. Create the destination folders inside 'src'
-if (!fs.existsSync(srcAssetsPath)) {
-    fs.mkdirSync(srcAssetsPath, { recursive: true });
-}
-if (!fs.existsSync(srcJuicesPath)) {
-    fs.mkdirSync(srcJuicesPath, { recursive: true });
+// 1. Create juices folder inside src/assets
+if (!fs.existsSync(juicesPath)) {
+    fs.mkdirSync(juicesPath, { recursive: true });
 }
 
-// 2. Map of the old hashed names to the clean names
-const fileMap = {
-    'cabbage-RJshbfVS.png': 'cabbage.png',
-    'cocktail-bFzl4BRs.png': 'juices/cocktail.png',
-    'grocery-bag-Bv2KXfSk.png': 'grocery-bag.png',
-    'mango-BgB0_9PQ.png': 'juices/mango.png',
-    'onions-BemCiYao.png': 'onions.png',
-    'passion-B_ZgAwPX.png': 'juices/passion.png',
-    'peppers-DOtH8Tt2.png': 'peppers.png',
-    'pineapple_mint-DG5VR-BA.png': 'juices/pineapple_mint.png',
-    'pineapple-DICLbnHg.png': 'juices/pineapple.png',
-    'spinach-oKsWFpk0.png': 'spinach.png',
-    'strawberry-Bmo_59sV.png': 'juices/strawberry.png',
-    'ukwaju-B2GAvnIL.png': 'juices/ukwaju.png'
+// Map of base names to their proper relative paths
+const targetImages = {
+    'cabbage': 'cabbage.png',
+    'grocery-bag': 'grocery-bag.png',
+    'onions': 'onions.png',
+    'peppers': 'peppers.png',
+    'spinach': 'spinach.png',
+    'cocktail': 'juices/cocktail.png',
+    'mango': 'juices/mango.png',
+    'passion': 'juices/passion.png',
+    'pineapple_mint': 'juices/pineapple_mint.png', // Placed before pineapple to ensure exact match
+    'pineapple': 'juices/pineapple.png',
+    'strawberry': 'juices/strawberry.png',
+    'ukwaju': 'juices/ukwaju.png'
 };
 
-// 3. Move and rename files from root/assets to src/assets
-let filesMoved = 0;
-Object.entries(fileMap).forEach(([oldName, newName]) => {
-    const oldPath = path.join(rootAssetsPath, oldName);
-    const newPath = path.join(srcAssetsPath, newName);
+if (fs.existsSync(assetsPath)) {
+    const files = fs.readdirSync(assetsPath);
+    let movedCount = 0;
     
-    if (fs.existsSync(oldPath)) {
-        fs.renameSync(oldPath, newPath);
-        console.log(`✅ Moved: ${oldName} -> src/assets/${newName}`);
-        filesMoved++;
-    }
-});
+    // Sort keys by length so 'pineapple_mint' is checked before 'pineapple'
+    const keys = Object.keys(targetImages).sort((a, b) => b.length - a.length);
 
-if (filesMoved === 0) {
-    console.log('⚠️ No files were moved. Make sure your hashed images are in the root "assets" folder!');
+    files.forEach(file => {
+        const fullPath = path.join(assetsPath, file);
+        
+        // Skip subdirectories
+        if (fs.statSync(fullPath).isDirectory()) return;
+
+        // Delete stray build files
+        if (file.endsWith('.js') || file.endsWith('.css')) {
+            fs.unlinkSync(fullPath);
+            console.log(`🗑️ Deleted stray file: ${file}`);
+            return;
+        }
+
+        // Dynamically fix PNG files regardless of their random hash
+        if (file.endsWith('.png')) {
+            for (let key of keys) {
+                if (file.startsWith(key + '-') || file === key + '.png') {
+                    const newRelativePath = targetImages[key];
+                    const newPath = path.join(assetsPath, newRelativePath);
+                    
+                    if (fullPath !== newPath) {
+                        fs.renameSync(fullPath, newPath);
+                        console.log(`✅ Fixed: ${file} -> src/assets/${newRelativePath}`);
+                        movedCount++;
+                    }
+                    break; // Move to the next file
+                }
+            }
+        }
+    });
+
+    if (movedCount === 0) console.log('⚠️ No files needed renaming. Are they already clean?');
+} else {
+    console.log('❌ Could not find src/assets folder!');
 }
 
-// 4. Delete the stray compiled output files
-['index-CJEHQSNQ.js', 'index-pG_L6C_1.css'].forEach(file => {
-    const filePath = path.join(rootAssetsPath, file);
-    if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-        console.log(`🗑️ Deleted stray build file: ${file}`);
-    }
-});
-
-// 5. Automatically push the fix to GitHub
+// Execute Git commands to push the fix
 try {
-    console.log('\nStaging changes to Git...');
+    console.log('\nSaving to GitHub...');
     execSync('git add .');
-    
-    console.log('Committing changes...');
-    execSync('git commit -m "Move assets into src and fix filenames"');
-    
-    console.log('Pushing to GitHub...');
+    execSync('git commit -m "Dynamically clean and fix image names"');
     execSync('git push origin main');
-    
-    console.log('\n🎉 ALL DONE! Check Render for the new successful deployment.');
-} catch (error) {
-    console.log('\n⚠️ Push step skipped (or nothing new to commit). Check your terminal for details.');
+    console.log('🎉 ALL DONE! Check Render for the successful deployment.');
+} catch (e) {
+    console.log('⚠️ Push skipped (The files might already be fixed on GitHub).');
 }
