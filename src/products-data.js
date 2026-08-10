@@ -16,7 +16,6 @@ import peppers from "./assets/peppers.png";
 import spinach from "./assets/spinach.png";
 import cabbage from "./assets/cabbage.png";
 import onions from "./assets/onions.png";
-import strawberryJuice from "./assets/strawberry.png";
 import pineappleJuice from "./assets/juices/pineapple.png";
 import pineappleMintJuice from "./assets/juices/pineapple_mint.png";
 import passionJuice from "./assets/juices/passion.png";
