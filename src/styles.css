@@ -1,0 +1,212 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@700&display=swap");
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-script: "Pacifico", cursive;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  
+  --color-leaf: var(--leaf);
+  --color-mint: var(--mint);
+  --color-mint-soft: var(--mint-soft);
+  --color-olive: var(--olive);
+  --color-tile-1: var(--tile-1);
+  --color-tile-2: var(--tile-2);
+  --color-tile-3: var(--tile-3);
+  --color-tile-4: var(--tile-4);
+}
+
+:root {
+  --leaf: oklch(0.32 0.09 155);
+  --mint: oklch(0.86 0.09 165);
+  --mint-soft: oklch(0.97 0.02 165);
+  --olive: oklch(0.62 0.11 95);
+  --tile-1: oklch(0.97 0.045 105);
+  --tile-2: oklch(0.97 0.035 150);
+  --tile-3: oklch(0.97 0.035 150);
+  --tile-4: oklch(0.96 0.03 350);
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+  --muted-foreground: oklch(0.554 0.046 257.417);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.929 0.013 255.508);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+@layer components {
+  .organic-hero {
+    background:
+      radial-gradient(circle at 82% 18%, color-mix(in oklch, var(--mint) 42%, transparent) 0 9rem, transparent 9.2rem),
+      radial-gradient(circle at 10% 82%, color-mix(in oklch, var(--olive) 20%, transparent) 0 11rem, transparent 11.2rem),
+      linear-gradient(135deg, var(--mint-soft), var(--background) 44%, color-mix(in oklch, var(--tile-1) 72%, white));
+  }
+
+  .organic-hero::before,
+  .organic-hero::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklch, var(--leaf) 16%, transparent);
+    pointer-events: none;
+  }
+
+  .organic-hero::before {
+    inset: 3rem auto auto 52%;
+    width: 25rem;
+    height: 25rem;
+  }
+
+  .organic-hero::after {
+    right: -5rem;
+    bottom: -8rem;
+    width: 22rem;
+    height: 22rem;
+    background: color-mix(in oklch, var(--mint) 20%, transparent);
+  }
+
+  .hero-produce-cluster {
+    position: relative;
+    min-height: 31rem;
+  }
+
+  .hero-produce-cluster::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(27rem, 80vw);
+    height: min(27rem, 80vw);
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle, color-mix(in oklch, var(--mint) 22%, white), transparent 62%),
+      color-mix(in oklch, var(--mint-soft) 76%, white);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--leaf) 10%, transparent);
+  }
+
+  .hero-produce-card {
+    position: absolute;
+    width: 10.5rem;
+    min-height: 12.5rem;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1.25rem 2.5rem color-mix(in oklch, var(--foreground) 12%, transparent);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .hero-produce-card:hover {
+    transform: translateY(-0.25rem) rotate(0deg);
+    box-shadow: 0 1.5rem 3rem color-mix(in oklch, var(--foreground) 16%, transparent);
+  }
+
+  .hero-produce-card-1 {
+    left: 8%;
+    top: 17%;
+    transform: rotate(-8deg);
+  }
+
+  .hero-produce-card-2 {
+    left: 41%;
+    top: 6%;
+    transform: rotate(6deg);
+  }
+
+  .hero-produce-card-3 {
+    right: 6%;
+    top: 35%;
+    transform: rotate(9deg);
+  }
+
+  .hero-produce-card-4 {
+    left: 31%;
+    bottom: 3%;
+    transform: rotate(-5deg);
+  }
+
+  .review-slideshow {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .review-slideshow::before {
+    content: "";
+    position: absolute;
+    inset: 1rem;
+    border-radius: 999px;
+    background: color-mix(in oklch, var(--mint) 28%, transparent);
+    filter: blur(2.5rem);
+    z-index: -1;
+  }
+
+  .review-slideshow-card {
+    position: relative;
+    min-height: 22rem;
+    border-radius: 0.5rem;
+    background: var(--background);
+    padding: clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 1.25rem 2.5rem color-mix(in oklch, var(--foreground) 10%, transparent);
+  }
+
+  @media (max-width: 640px) {
+    .organic-hero {
+      padding-top: 2.5rem;
+    }
+
+    .organic-hero::before {
+      width: 16rem;
+      height: 16rem;
+      left: 28%;
+    }
+
+    .hero-produce-cluster {
+      min-height: 40rem;
+    }
+
+    .hero-produce-card {
+      width: min(10rem, 44vw);
+    }
+
+    .hero-produce-card-1 {
+      left: 0;
+      top: 4rem;
+    }
+
+    .hero-produce-card-2 {
+      left: auto;
+      right: 0;
+      top: 1rem;
+    }
+
+    .hero-produce-card-3 {
+      left: 0;
+      right: auto;
+      top: 19rem;
+    }
+
+    .hero-produce-card-4 {
+      left: auto;
+      right: 0;
+      bottom: 0;
+    }
+
+    .review-slideshow-card {
+      min-height: 24rem;
+    }
+  }
+}
