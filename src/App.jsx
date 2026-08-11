@@ -60,7 +60,7 @@ const navLinks = [
 ];
 
 const featuredProductIds = ["yellow-bell-pepper", "spinach", "cabbage", "mango-juice"];
-const quickAddProductIds = ["pineapple-juice", "passion-juice", "strawberry-juice", "red-onions"];
+const quickAddProductIds = ["pineapple-juice", "passion-juice", "red-onions"];
 
 const sortOptions = ["Featured", "Price: Low to High", "Price: High to Low"];
 

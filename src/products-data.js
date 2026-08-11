@@ -115,19 +115,6 @@ export const productCatalog = [
     liked: false,
   },
   {
-    id: "strawberry",
-    name: "Strawberry",
-    description: "Plump, juicy strawberries bursting with flavor.",
-    price: 4.5,
-    unit: "lb",
-    category: "Fruits",
-    rating: 4.9,
-    reviews: 176,
-    image: strawberry, // suggested filename: strawberry.png
-    tile: "bg-tile-4",
-    liked: false,
-  },
-  {
     id: "yellow-bell-pepper",
     name: "Yellow Bell Pepper",
     description: "Crunchy, mildly sweet yellow bell peppers.",
@@ -359,19 +346,6 @@ export const productCatalog = [
     reviews: 29,
     image: oranges, // suggested filename: cauliflower.png
     tile: "bg-tile-3",
-    liked: false,
-  },
-  {
-    id: "strawberry-juice",
-    name: "Strawberry Juice",
-    description: "Cold-pressed strawberry juice. Strawberries (100%), nothing else.",
-    price: 450,
-    unit: "glass",
-    category: "Juices",
-    rating: 4.8,
-    reviews: 64,
-    image: strawberryJuice,
-    tile: "bg-tile-4",
     liked: false,
   },
   {
